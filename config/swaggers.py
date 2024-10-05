@@ -10,7 +10,6 @@ schema_view = get_schema_view(
         description="SHopick description",
         terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="contact@snippets.local"),
-        license=openapi.License(name="SHOPICK License"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),

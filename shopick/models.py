@@ -1,13 +1,12 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from pkg_resources import require
+
+from shared.apps import SharedConfig
 from shared.models import TimeStampedModel
 
 class User(AbstractUser, TimeStampedModel):
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
-    email = models.EmailField(unique=True, blank=False, null=True)
-    phone = PhoneNumberField(unique=True, blank=False, null=False)
     is_active = models.BooleanField(default=False)
 
     USERNAME_FIELD = "phone"
@@ -17,7 +16,6 @@ class Profile(TimeStampedModel):
     address = models.CharField(max_length=200)
     city = models.CharField(max_length=200)
     country = models.CharField(max_length=200)
-    postal_code = models.CharField(max_length=200, null=True, blank=True)
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=200)
@@ -47,12 +45,13 @@ class Product(TimeStampedModel):
     price = models.IntegerField()
     size = models.CharField(max_length=200)
     color = models.CharField(max_length=200)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="products")
     discount_percent = models.DecimalField(max_digits=5, decimal_places=2)
     brand = models.CharField(max_length=200)
     like = models.ManyToManyField(User, related_name="product_like", blank=True)
+    comment = models.ManyToManyField(
+        Comment, related_name="product_comment", blank=True
+    )
     views = models.ManyToManyField(User, related_name="viewed_products", blank=True)
-    seller = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name="seller_products")
 
     def total_views(self):
         return self.views.count()

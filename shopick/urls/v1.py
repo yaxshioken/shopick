@@ -3,7 +3,6 @@ from rest_framework import routers
 
 from shopick import api_endpoints
 from shopick.views import (CategoryViewSet, CommentViewSet, ProductViewSet,
-                           ProfileViewSet, SellerViewSet, UserViewSet, WishlistViewSet, OrderViewSet, CardViewSet)
 
 router = routers.DefaultRouter()
 router.register(r"users", UserViewSet, basename="users")

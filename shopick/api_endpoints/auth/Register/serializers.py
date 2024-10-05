@@ -1,14 +1,10 @@
 from uuid import uuid4
-
-from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import CharField, EmailField
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
 from shopick.models import User
-
 
 class RegisterSerializer(TokenObtainPairSerializer):
     first_name = CharField(required=True)
@@ -60,6 +56,5 @@ class RegisterSerializer(TokenObtainPairSerializer):
             "first_name": user.first_name,
             "last_name": user.last_name,
             "email": user.email,
-            "phone": str(user.phone),
             "username": user.username,
         }

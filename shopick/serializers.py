@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from shopick.models import Category, Comment, Product, Profile, Seller, User, Wishlist, Card, Order
 
 
 class UserSerializer(serializers.ModelSerializer):
