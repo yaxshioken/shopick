@@ -8,7 +8,7 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = '__all__'
         extra_kwargs = {
-            "picture": {"required": False},
+            "picture": {"required": False,"allow_null":True},
         }
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:

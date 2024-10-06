@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from shopick import api_endpoints
 from shopick.api_endpoints.account.views import UserViewSet, ProfileViewSet, CommentViewSet, SellerViewSet, \
-    WishlistViewSet, CardViewSet
+    WishlistViewSet, CardViewSet, NotificationsViewSet
 from shopick.api_endpoints.shopick.views import CategoryViewSet, ProductViewSet, OrderViewSet
 
 router = DefaultRouter()
@@ -17,7 +17,7 @@ router.register(r"wishlists", WishlistViewSet, basename="wishlists"),
 router.register(r"orders", OrderViewSet, basename="orders"),
 router.register(r"card", CardViewSet, basename="card"),
 
-
+router.register(r"notifications",NotificationsViewSet, basename="notifications")
 urlpatterns = router.urls
 
 from rest_framework_simplejwt.views import (TokenObtainSlidingView,

@@ -2,7 +2,7 @@ from rest_framework import viewsets
 
 from shopick.api_endpoints.account.serializers import UserSerializer, CommentSerializer, SellerSerializer, \
     CardSerializer, WishlistSerializer, ProfileSerializer
-from shopick.models import User, Comment, Card, Seller, Wishlist, Profile
+from shopick.models import User, Comment, Card, Seller, Wishlist, Profile, Notifications
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -33,3 +33,6 @@ class WishlistViewSet(viewsets.ModelViewSet):
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+class NotificationsViewSet(viewsets.ModelViewSet):
+    queryset = Notifications.objects.all()
+    serializer_class = Notifications
