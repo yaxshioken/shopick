@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from shopick.models import User, Comment, Seller, Card, Wishlist, Profile
+from shopick.models import User, Comment, Seller, Card, Wishlist, Profile, Notifications
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -38,3 +38,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = '__all__'
         read_only_fields = ('user',)
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notifications
+        fields = '__all__'

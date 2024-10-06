@@ -3,6 +3,7 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
 from shared.models import TimeStampedModel
+from shopick.choices import SizeChoice, ColorChoice, NotificationChoice
 
 
 class User(AbstractUser, TimeStampedModel):
@@ -50,14 +51,14 @@ class Comment(TimeStampedModel):
 
 
 class Product(TimeStampedModel):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200,unique=True)
     description = models.TextField()
-    amount = models.IntegerField()
-    picture = models.ImageField(upload_to="products/")
-    price = models.IntegerField()
-    size = models.CharField(max_length=200)
-    color = models.CharField(max_length=200)
-    discount_percent = models.DecimalField(max_digits=5, decimal_places=2)
+    amount = models.IntegerField(null=False)
+    picture = models.ImageField(upload_to="products/",null=True,blank=True)
+    price = models.IntegerField(null=False)
+    size = models.CharField(choices=SizeChoice.choices,default=SizeChoice.NONE)
+    color = models.CharField(choices=ColorChoice.choices,default=ColorChoice.NONE)
+    discount_percent = models.DecimalField(max_digits=5, decimal_places=2,null=True)
     brand = models.CharField(max_length=200)
     like = models.ManyToManyField(User, related_name="product_like", blank=True)
     views = models.ManyToManyField(User, related_name="viewed_products", blank=True)
@@ -113,3 +114,22 @@ class Card(TimeStampedModel):
 
     def __str__(self):
         return self.card_number
+class Notifications(TimeStampedModel):
+    message = models.TextField()
+    account = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="notifications"
+    )
+    is_read = models.BooleanField(default=False)
+    type = models.CharField(choices=NotificationChoice.choices, max_length=15)
+    url = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.message
+
+    def mark_as_read(self):
+        self.is_read = False
+        self.save()
+
+    class Meta:
+        verbose_name = "Notifications"
+        verbose_name_plural = "Notifications"
