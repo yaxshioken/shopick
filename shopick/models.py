@@ -9,6 +9,8 @@ class User(AbstractUser, TimeStampedModel):
     is_active = models.BooleanField(default=False)
     phone = PhoneNumberField(unique=True, max_length=13, null=False)
     USERNAME_FIELD = "phone"
+    def __str__(self):
+        return self.phone
 
 
 class Profile(TimeStampedModel):
@@ -16,11 +18,13 @@ class Profile(TimeStampedModel):
     address = models.CharField(max_length=200)
     city = models.CharField(max_length=200)
     country = models.CharField(max_length=200)
-
+    def __str__(self):
+        return self.user
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=200)
-
+    def __str__(self):
+        return self.name
     class Meta:
         verbose_name_plural = "Categories"
         verbose_name = "Category"
@@ -32,6 +36,8 @@ class Seller(TimeStampedModel):
     description = models.TextField()
     location = models.CharField(max_length=500)
     phone_number = PhoneNumberField(unique=True, blank=False, null=False)
+    def __str__(self):
+        return self.name
 
 
 class Comment(TimeStampedModel):
@@ -39,6 +45,8 @@ class Comment(TimeStampedModel):
     product = models.ForeignKey("Product", on_delete=models.CASCADE)
     like = models.IntegerField(default=0)
     comment = models.TextField(blank=True, null=True)
+    def __str__(self):
+        return self.comment
 
 
 class Product(TimeStampedModel):
@@ -53,6 +61,7 @@ class Product(TimeStampedModel):
     brand = models.CharField(max_length=200)
     like = models.ManyToManyField(User, related_name="product_like", blank=True)
     views = models.ManyToManyField(User, related_name="viewed_products", blank=True)
+    category = models.ManyToManyField(Category, related_name="categories")
 
     def total_views(self):
         return self.views.count()

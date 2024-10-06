@@ -14,4 +14,5 @@ class RegisterView(TokenObtainSlidingView):
         serializer.save()  # Save user
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+
 __all__ = ["RegisterView"]
