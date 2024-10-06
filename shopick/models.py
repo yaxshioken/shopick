@@ -53,6 +53,7 @@ class Product(TimeStampedModel):
     brand = models.CharField(max_length=200)
     like = models.ManyToManyField(User, related_name="product_like", blank=True)
     views = models.ManyToManyField(User, related_name="viewed_products", blank=True)
+    category = models.ManyToManyField(Category, related_name="categories")
 
     def total_views(self):
         return self.views.count()

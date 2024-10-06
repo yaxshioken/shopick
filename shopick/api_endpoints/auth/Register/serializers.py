@@ -61,5 +61,5 @@ class RegisterSerializer(TokenObtainPairSerializer):
             "last_name": user.last_name,
             "email": user.email,
             "username": user.username,
-            "phone":user.phone
+            "phone": user.phone,
         }
