@@ -1,8 +1,9 @@
 from django.urls import path
 from rest_framework import routers
-
 from shopick import api_endpoints
-from shopick.views import (CategoryViewSet, CommentViewSet, ProductViewSet,
+from shopick.api_endpoints.auth.ResetParol.view import PasswordResetRequestView
+from shopick.views import (CategoryViewSet, CommentViewSet, ProductViewSet, UserViewSet,
+                           ProfileViewSet, SellerViewSet, WishlistViewSet, OrderViewSet, CardViewSet)
 
 router = routers.DefaultRouter()
 router.register(r"users", UserViewSet, basename="users")
@@ -27,5 +28,6 @@ token_urlpatterns = [
     path("register/", api_endpoints.RegisterView.as_view(), name="register"),
     path("api/token/", TokenObtainSlidingView.as_view(), name="token_obtain"),
     path("api/token/refresh/", TokenRefreshSlidingView.as_view(), name="token_refresh"),
+    path("password-reset/", PasswordResetRequestView.as_view(), name="password_reset"),
 ]
 urlpatterns += token_urlpatterns
