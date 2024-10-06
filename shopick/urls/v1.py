@@ -1,20 +1,21 @@
 from django.urls import path
-from rest_framework import routers
+from rest_framework.routers import DefaultRouter
 
 from shopick import api_endpoints
-from shopick.views import (CategoryViewSet, CommentViewSet, ProductViewSet,
+from shopick.views import (CardViewSet, CategoryViewSet, CommentViewSet,
+                           OrderViewSet, ProductViewSet, ProfileViewSet,
+                           SellerViewSet, UserViewSet, WishlistViewSet)
 
-router = routers.DefaultRouter()
-router.register(r"users", UserViewSet, basename="users")
-router.register(r"profile", ProfileViewSet, basename="profile")
-router.register(r"comments", CommentViewSet, basename="comments")
-router.register(r"categories", CategoryViewSet, basename="categories")
-router.register(r"sellers", SellerViewSet, basename="sellers")
-router.register(r"products", ProductViewSet, basename="products")
-
-router.register(r"wishlists", WishlistViewSet, basename="wishlists")
-router.register(r"orders", OrderViewSet, basename="orders")
-router.register(r"card", CardViewSet, basename="card")
+router = DefaultRouter()
+router.register(r"users", UserViewSet, basename="users"),
+router.register(r"profile", ProfileViewSet, basename="profile"),
+router.register(r"comments", CommentViewSet, basename="comments"),
+router.register(r"categories", CategoryViewSet, basename="categories"),
+router.register(r"sellers", SellerViewSet, basename="sellers"),
+router.register(r"products", ProductViewSet, basename="products"),
+router.register(r"wishlists", WishlistViewSet, basename="wishlists"),
+router.register(r"orders", OrderViewSet, basename="orders"),
+router.register(r"card", CardViewSet, basename="card"),
 
 
 urlpatterns = router.urls

@@ -11,6 +11,7 @@ class RegisterView(TokenObtainSlidingView):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()  # Save user
+        serializer.save()  # Save user
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 __all__ = ["RegisterView"]

@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from shopick.models import (Card, Category, Comment, Order, Product, Profile,
+                            Seller, User, Wishlist)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -17,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ("user", "address", "city", "country", "postal_code")
+        fields = ("user", "address", "city", "country")
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -41,22 +43,7 @@ class SellerSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = (
-            "name",
-            "description",
-            "amount",
-            "price",
-            "price",
-            "size",
-            "category",
-            "seller",
-            "color",
-            "discount_percent",
-            "brand",
-            "like",
-            "views",
-        )
-
+        fields="__all__"
 
 class WishlistSerializer(serializers.ModelSerializer):
     class Meta:
@@ -68,17 +55,28 @@ class CardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
         fields = (
-        "card_number", "expiration_date", 'card_token', "cvv", "payment_amount", "payment_type", "payment_date",
-        "payment_status")
+            "card_number",
+            "expiration_date",
+            "card_token",
+            "cvv",
+            "payment_amount",
+            "payment_type",
+            "payment_date",
+            "payment_status",
+        )
+
+
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields=(     'reception_area',
-                    'user_area',
-                    'user',
-                    'payment_type',
-                    'product',
-                    'amount',
-                    'order_date',
-                    'delivery_date',
-                    'status')
+        fields = (
+            "reception_area",
+            "user_area",
+            "user",
+            "payment_type",
+            "product",
+            "amount",
+            "order_date",
+            "delivery_date",
+            "status",
+        )
