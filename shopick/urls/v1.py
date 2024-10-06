@@ -2,9 +2,9 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from shopick import api_endpoints
-from shopick.views import (CardViewSet, CategoryViewSet, CommentViewSet,
-                           OrderViewSet, ProductViewSet, ProfileViewSet,
-                           SellerViewSet, UserViewSet, WishlistViewSet)
+from shopick.api_endpoints.account.views import UserViewSet, ProfileViewSet, CommentViewSet, SellerViewSet, \
+    WishlistViewSet, CardViewSet
+from shopick.api_endpoints.shopick.views import CategoryViewSet, ProductViewSet, OrderViewSet
 
 router = DefaultRouter()
 router.register(r"users", UserViewSet, basename="users"),
