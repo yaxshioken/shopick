@@ -1,5 +1,10 @@
+from rest_framework import viewsets
+
+from shopick.models import User, Wishlist, Order, Card, Seller, Product, Category, Comment, Profile
 from shopick.serializers import (CategorySerializer, CommentSerializer,
                                  ProductSerializer, ProfileSerializer,
+                                 OrderSerializer, CardSerializer, WishlistSerializer,
+                                 SellerSerializer, UserSerializer)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -30,3 +35,18 @@ class SellerViewSet(viewsets.ModelViewSet):
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+
+class WishlistViewSet(viewsets.ModelViewSet):
+    queryset = Wishlist.objects.all()
+    serializer_class = WishlistSerializer
+
+
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+
+class CardViewSet(viewsets.ModelViewSet):
+    queryset = Card.objects.all()
+    serializer_class = CardSerializer
