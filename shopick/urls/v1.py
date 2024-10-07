@@ -2,9 +2,12 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from shopick import api_endpoints
-from shopick.api_endpoints.account.views import UserViewSet, ProfileViewSet, CommentViewSet, SellerViewSet, \
-    WishlistViewSet, CardViewSet
-from shopick.api_endpoints.shopick.views import CategoryViewSet, ProductViewSet, OrderViewSet
+from shopick.api_endpoints.account.views import (CardViewSet, CommentViewSet,
+                                                 NotificationsViewSet,
+                                                 ProfileViewSet, SellerViewSet,
+                                                 UserViewSet, WishlistViewSet)
+from shopick.api_endpoints.shopick.views import (CategoryViewSet, OrderViewSet,
+                                                 ProductViewSet)
 
 router = DefaultRouter()
 router.register(r"users", UserViewSet, basename="users"),
@@ -17,7 +20,7 @@ router.register(r"wishlists", WishlistViewSet, basename="wishlists"),
 router.register(r"orders", OrderViewSet, basename="orders"),
 router.register(r"card", CardViewSet, basename="card"),
 
-
+router.register(r"notifications", NotificationsViewSet, basename="notifications")
 urlpatterns = router.urls
 
 from rest_framework_simplejwt.views import (TokenObtainSlidingView,
