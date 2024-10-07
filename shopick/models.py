@@ -1,15 +1,19 @@
+import uuid
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
+from config.managers import UserManager
 from shared.models import TimeStampedModel
-from shopick.choices import SizeChoice, ColorChoice, NotificationChoice
+from shopick.choices import ColorChoice, NotificationChoice, SizeChoice
 
 
 class User(AbstractUser, TimeStampedModel):
     is_active = models.BooleanField(default=False)
     phone = PhoneNumberField(unique=True, max_length=13, null=False)
     USERNAME_FIELD = "phone"
+    objects = UserManager()
     def __str__(self):
         return self.phone
 
@@ -19,13 +23,17 @@ class Profile(TimeStampedModel):
     address = models.CharField(max_length=200)
     city = models.CharField(max_length=200)
     country = models.CharField(max_length=200)
+
     def __str__(self):
         return self.user
 
+
 class Category(TimeStampedModel):
     name = models.CharField(max_length=200)
+
     def __str__(self):
         return self.name
+
     class Meta:
         verbose_name_plural = "Categories"
         verbose_name = "Category"
@@ -37,6 +45,7 @@ class Seller(TimeStampedModel):
     description = models.TextField()
     location = models.CharField(max_length=500)
     phone_number = PhoneNumberField(unique=True, blank=False, null=False)
+
     def __str__(self):
         return self.name
 
@@ -46,19 +55,23 @@ class Comment(TimeStampedModel):
     product = models.ForeignKey("Product", on_delete=models.CASCADE)
     like = models.IntegerField(default=0)
     comment = models.TextField(blank=True, null=True)
+
     def __str__(self):
         return self.comment
 
 
 class Product(TimeStampedModel):
-    name = models.CharField(max_length=200,unique=True)
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
+    name = models.CharField(max_length=200, unique=True)
     description = models.TextField()
     amount = models.IntegerField(null=False)
-    picture = models.ImageField(upload_to="products/",null=True,blank=True)
+    picture = models.ImageField(upload_to="products/", null=True, blank=True)
     price = models.IntegerField(null=False)
-    size = models.CharField(choices=SizeChoice.choices,default=SizeChoice.NONE)
-    color = models.CharField(choices=ColorChoice.choices,default=ColorChoice.NONE)
-    discount_percent = models.DecimalField(max_digits=5, decimal_places=2,null=True)
+    size = models.CharField(choices=SizeChoice.choices, default=SizeChoice.NONE)
+    color = models.CharField(choices=ColorChoice.choices, default=ColorChoice.NONE)
+    discount_percent = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     brand = models.CharField(max_length=200)
     like = models.ManyToManyField(User, related_name="product_like", blank=True)
     views = models.ManyToManyField(User, related_name="viewed_products", blank=True)
@@ -75,6 +88,10 @@ class Product(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    @property
+    def build_url(self):
+        return f"/products/{self.id}"
 
 
 class Wishlist(TimeStampedModel):
@@ -114,7 +131,12 @@ class Card(TimeStampedModel):
 
     def __str__(self):
         return self.card_number
+
+
 class Notifications(TimeStampedModel):
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
+    )
     message = models.TextField()
     account = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="notifications"
@@ -122,6 +144,7 @@ class Notifications(TimeStampedModel):
     is_read = models.BooleanField(default=False)
     type = models.CharField(choices=NotificationChoice.choices, max_length=15)
     url = models.CharField(max_length=255)
+
 
     def __str__(self):
         return self.message
