@@ -1,9 +1,6 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
-from rest_framework import permissions, viewsets
-from rest_framework_simplejwt.views import (TokenObtainPairView,
-                                            TokenObtainSlidingView)
+from rest_framework_simplejwt.views import TokenObtainSlidingView
 
-from shopick.api_endpoints.auth.Login.serializers import LoginSerializer
+from account.api_endpoints.auth.Login.serializers import LoginSerializer
 
 
 class LoginView(TokenObtainSlidingView):

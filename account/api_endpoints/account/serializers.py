@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
-from shopick.models import (Card, Comment, Notifications, Profile, Seller,
-                            Account, Wishlist)
+from account.models import Account, Card, Notifications, Profile, Seller
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -11,18 +10,6 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "password": {"write_only": True},
         }
-
-
-class CommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = "__all__"
-        # extra_kwargs = {
-        #     "like":{"required":False},
-        #     "product":{"required":False},
-        #
-        # }
-        read_only_fields = ("user",)
 
 
 class SellerSerializer(serializers.ModelSerializer):
@@ -36,12 +23,6 @@ class CardSerializer(serializers.ModelSerializer):
         model = Card
         fields = "__all__"
         read_only_fields = ("user",)
-
-
-class WishlistSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Wishlist
-        fields = "__all__"
 
 
 class ProfileSerializer(serializers.ModelSerializer):

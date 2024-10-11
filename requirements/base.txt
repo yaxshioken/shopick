@@ -24,3 +24,4 @@ Pillow>=10.4.0,<10.5
 psycopg2-binary>=2.9.9,<3.0
 celery
 redis
+gunicorn
