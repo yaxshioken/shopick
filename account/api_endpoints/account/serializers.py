@@ -1,12 +1,12 @@
 from rest_framework import serializers
 
 from shopick.models import (Card, Comment, Notifications, Profile, Seller,
-                            User, Wishlist)
+                            Account, Wishlist)
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = Account
         fields = ("first_name", "last_name", "phone", "email", "password")
         extra_kwargs = {
             "password": {"write_only": True},

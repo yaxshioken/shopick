@@ -7,11 +7,11 @@ from shopick.api_endpoints.account.serializers import (CardSerializer,
                                                        UserSerializer,
                                                        WishlistSerializer)
 from shopick.models import (Card, Comment, Notifications, Profile, Seller,
-                            User, Wishlist)
+                            Account, Wishlist)
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = Account.objects.all()
     serializer_class = UserSerializer
 
 
