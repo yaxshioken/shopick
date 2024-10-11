@@ -1,2 +1,2 @@
-from .Register import *
 from .Login import *
+from .Register import *

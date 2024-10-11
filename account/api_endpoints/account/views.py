@@ -1,10 +1,11 @@
+
 from rest_framework.viewsets import ModelViewSet
 
 from account.api_endpoints.account.serializers import (CardSerializer,
                                                        ProfileSerializer,
                                                        SellerSerializer,
-                                                       UserSerializer)
-from account.models import Account, Card, Notifications, Profile, Seller
+                                                       UserSerializer, TransactionSerializer)
+from account.models import Account, Card, Notifications, Profile, Seller, Transaction
 
 
 class UserViewSet(ModelViewSet):
@@ -30,3 +31,6 @@ class ProfileViewSet(ModelViewSet):
 class NotificationsViewSet(ModelViewSet):
     queryset = Notifications.objects.all()
     serializer_class = Notifications
+class TransactionViewSet(ModelViewSet):
+    queryset = Transaction.objects.all()
+    serializer_class = TransactionSerializer
