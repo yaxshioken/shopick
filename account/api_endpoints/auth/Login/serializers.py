@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import (PasswordField,
                                                   TokenObtainPairSerializer)
 
-from shopick.models import User
+from shopick.models import Account
 
 
 class LoginSerializer(TokenObtainPairSerializer):

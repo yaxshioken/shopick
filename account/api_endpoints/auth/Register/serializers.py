@@ -7,7 +7,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.fields import CharField, EmailField
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from shopick.models import User
+from shopick.models import Account
 
 
 class RegisterSerializer(TokenObtainPairSerializer):
@@ -19,7 +19,7 @@ class RegisterSerializer(TokenObtainPairSerializer):
     phone = PhoneNumberField(required=True)
 
     class Meta:
-        model = User
+        model = Account
         extra_kwargs = {
             "last_name": {"required": False, "allow_blank": True},
             "username": {"required": False, "allow_blank": True},
@@ -34,10 +34,10 @@ class RegisterSerializer(TokenObtainPairSerializer):
         if password != password2:
             raise ValidationError({"password": _("Passwords must match.")})
 
-        if User.objects.filter(phone=phone).exists():
+        if Account.objects.filter(phone=phone).exists():
             raise ValidationError({"phone": _("Phone number already exists.")})
 
-        if User.objects.filter(email=email).exists():
+        if Account.objects.filter(email=email).exists():
             raise ValidationError({"email": _("Email already exists.")})
 
         return data
@@ -48,10 +48,10 @@ class RegisterSerializer(TokenObtainPairSerializer):
         phone = validated_data.get("phone")
 
         username = slugify(f"{uuid4()}-{phone}")
-        while User.objects.filter(username=username).exists():
+        while Account.objects.filter(username=username).exists():
             username = slugify(f"{uuid4()}-{phone}")
 
-        user = User.objects.create(**validated_data, username=username)
+        user = Account.objects.create(**validated_data, username=username)
         user.set_password(password)
         user.save()
 
