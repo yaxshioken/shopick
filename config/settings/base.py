@@ -43,7 +43,7 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
-CUSTOM_APPS = ["shopick"]
+CUSTOM_APPS = ["shopick", "account"]
 THIRD_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
@@ -139,7 +139,7 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-AUTH_USER_MODEL = "shopick.User"
+AUTH_USER_MODEL = "account.Account"
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (

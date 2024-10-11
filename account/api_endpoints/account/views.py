@@ -1,45 +1,32 @@
-from rest_framework import viewsets
+from rest_framework.viewsets import ModelViewSet
 
-from shopick.api_endpoints.account.serializers import (CardSerializer,
-                                                       CommentSerializer,
+from account.api_endpoints.account.serializers import (CardSerializer,
                                                        ProfileSerializer,
                                                        SellerSerializer,
-                                                       UserSerializer,
-                                                       WishlistSerializer)
-from shopick.models import (Card, Comment, Notifications, Profile, Seller,
-                            Account, Wishlist)
+                                                       UserSerializer)
+from account.models import Account, Card, Notifications, Profile, Seller
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(ModelViewSet):
     queryset = Account.objects.all()
     serializer_class = UserSerializer
 
 
-class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-
-
-class SellerViewSet(viewsets.ModelViewSet):
+class SellerViewSet(ModelViewSet):
     queryset = Seller.objects.all()
     serializer_class = SellerSerializer
 
 
-class CardViewSet(viewsets.ModelViewSet):
+class CardViewSet(ModelViewSet):
     queryset = Card.objects.all()
     serializer_class = CardSerializer
 
 
-class WishlistViewSet(viewsets.ModelViewSet):
-    queryset = Wishlist.objects.all()
-    serializer_class = WishlistSerializer
-
-
-class ProfileViewSet(viewsets.ModelViewSet):
+class ProfileViewSet(ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
 
-class NotificationsViewSet(viewsets.ModelViewSet):
+class NotificationsViewSet(ModelViewSet):
     queryset = Notifications.objects.all()
     serializer_class = Notifications

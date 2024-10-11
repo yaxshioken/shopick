@@ -24,7 +24,8 @@ from config.swaggers import swagger_urlpatterns
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("shopick.urls.v1"), name="shopick"),
+    path("api/v1/", include("account.urls.v1")),
+    path("api/v1/", include("shopick.urls.v1"), name="shopick"),
 ]
 urlpatterns += swagger_urlpatterns
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
