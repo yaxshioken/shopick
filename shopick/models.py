@@ -15,6 +15,7 @@ class User(AbstractUser, TimeStampedModel):
 class Profile(TimeStampedModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # postal_code = models.CharField(max_length=10, blank=True, null=True)
+    temporary_password = models.CharField(max_length=6, null=True, blank=True)
     address = models.CharField(max_length=200)
     city = models.CharField(max_length=200)
     country = models.CharField(max_length=200)
