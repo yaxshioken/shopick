@@ -1,9 +1,5 @@
 from phonenumber_field.serializerfields import PhoneNumberField
-from rest_framework import serializers
-from rest_framework_simplejwt.serializers import (PasswordField,
-                                                  TokenObtainPairSerializer)
-
-from shopick.models import User
+from rest_framework_simplejwt.serializers import (PasswordField, TokenObtainPairSerializer)
 
 
 class LoginSerializer(TokenObtainPairSerializer):
