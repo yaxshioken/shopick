@@ -10,6 +10,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from shopick.models import Account
 
 
+
 class RegisterSerializer(TokenObtainPairSerializer):
     first_name = CharField(required=True)
     last_name = CharField(required=False)

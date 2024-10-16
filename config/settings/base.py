@@ -164,3 +164,11 @@ SIMPLE_JWT = {
 # EMAIL_USE_TLS = True
 # EMAIL_HOST_USER = 'kocharovmirshakar@gmail.com'
 # EMAIL_HOST_PASSWORD = 'z l x t l u u o e x k c s d t h'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'kocharovmirshakar@gmail.com'
+EMAIL_HOST_PASSWORD = 'z l x t l u u o e x k c s d t h'

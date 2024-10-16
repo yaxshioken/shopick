@@ -37,66 +37,171 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="Product",
+            name="User",
             fields=[
-                ("created_at", models.DateTimeField(auto_now_add=True)),
-                ("updated_at", models.DateTimeField(auto_now=True)),
                 (
                     "id",
-                    models.UUIDField(
-                        default=uuid.uuid4,
-                        editable=False,
+                    models.BigAutoField(
+                        auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        unique=True,
+                        verbose_name="ID",
                     ),
                 ),
-                ("name", models.CharField(max_length=200, unique=True)),
+                ("password", models.CharField(max_length=128, verbose_name="password")),
+                (
+                    "last_login",
+                    models.DateTimeField(
+                        blank=True, null=True, verbose_name="last login"
+                    ),
+                ),
+                (
+                    "is_superuser",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Designates that this user has all permissions without explicitly assigning them.",
+                        verbose_name="superuser status",
+                    ),
+                ),
+                (
+                    "username",
+                    models.CharField(
+                        error_messages={
+                            "unique": "A user with that username already exists."
+                        },
+                        help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                        max_length=150,
+                        unique=True,
+                        validators=[
+                            django.contrib.auth.validators.UnicodeUsernameValidator()
+                        ],
+                        verbose_name="username",
+                    ),
+                ),
+                (
+                    "is_staff",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Designates whether the user can log into this admin site.",
+                        verbose_name="staff status",
+                    ),
+                ),
+                (
+                    "date_joined",
+                    models.DateTimeField(
+                        default=django.utils.timezone.now, verbose_name="date joined"
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("first_name", models.CharField(max_length=200)),
+                ("last_name", models.CharField(max_length=200)),
+                ("email", models.EmailField(max_length=254, null=True, unique=True)),
+                (
+                    "phone",
+                    phonenumber_field.modelfields.PhoneNumberField(
+                        max_length=128, region=None, unique=True
+                    ),
+                ),
+                ("is_active", models.BooleanField(default=False)),
+                (
+                    "groups",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="The groups this user belongs to. A user will get all permissions granted to each of their groups.",
+                        related_name="user_set",
+                        related_query_name="user",
+                        to="auth.group",
+                        verbose_name="groups",
+                    ),
+                ),
+                (
+                    "user_permissions",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="Specific permissions for this user.",
+                        related_name="user_set",
+                        related_query_name="user",
+                        to="auth.permission",
+                        verbose_name="user permissions",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "user",
+                "verbose_name_plural": "users",
+                "abstract": False,
+            },
+            managers=[
+                ("objects", django.contrib.auth.models.UserManager()),
+            ],
+        ),
+        migrations.CreateModel(
+            name="Card",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("card_number", models.CharField(max_length=200)),
+                ("expiration_date", models.DateField(auto_now_add=True)),
+                ("card_token", models.CharField(max_length=200)),
+                ("cvv", models.CharField(blank=True, max_length=200, null=True)),
+                ("payment_amount", models.IntegerField()),
+                ("payment_type", models.CharField(max_length=200)),
+                ("payment_date", models.DateField(auto_now_add=True)),
+                ("payment_status", models.CharField(max_length=200)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+            ],
+            options={
+                "abstract": False,
+            },
+        ),
+        migrations.CreateModel(
+            name="Product",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("name", models.CharField(max_length=200)),
                 ("description", models.TextField()),
                 ("amount", models.IntegerField()),
-                (
-                    "picture",
-                    models.ImageField(blank=True, null=True, upload_to="products/"),
-                ),
+                ("picture", models.ImageField(upload_to="products/")),
                 ("price", models.IntegerField()),
-                (
-                    "size",
-                    models.CharField(
-                        choices=[
-                            ("", "None"),
-                            ("small", "Small"),
-                            ("medium", "Medium"),
-                            ("large", "Large"),
-                        ],
-                        default="",
-                    ),
-                ),
-                (
-                    "color",
-                    models.CharField(
-                        choices=[
-                            ("", "None"),
-                            ("red", "Red"),
-                            ("green", "Green"),
-                            ("yellow", "Yellow"),
-                            ("blue", "Blue"),
-                            ("purple", "Purple"),
-                            ("pink", "Pink"),
-                            ("white", "White"),
-                            ("black", "Black"),
-                        ],
-                        default="",
-                    ),
-                ),
+                ("size", models.CharField(max_length=200)),
+                ("color", models.CharField(max_length=200)),
                 (
                     "discount_percent",
-                    models.DecimalField(decimal_places=2, max_digits=5, null=True),
+                    models.DecimalField(decimal_places=2, max_digits=5),
                 ),
                 ("brand", models.CharField(max_length=200)),
                 (
                     "category",
-                    models.ManyToManyField(
-                        related_name="categories", to="shopick.category"
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="products",
+                        to="shopick.category",
                     ),
                 ),
                 (
@@ -194,6 +299,83 @@ class Migration(migrations.Migration):
             options={
                 "abstract": False,
             },
+        ),
+        migrations.CreateModel(
+            name="Profile",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("address", models.CharField(max_length=200)),
+                ("city", models.CharField(max_length=200)),
+                ("country", models.CharField(max_length=200)),
+                (
+                    "postal_code",
+                    models.CharField(blank=True, max_length=200, null=True),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+            ],
+            options={
+                "abstract": False,
+            },
+        ),
+        migrations.CreateModel(
+            name="Seller",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("name", models.CharField(max_length=200)),
+                ("description", models.TextField()),
+                ("location", models.CharField(max_length=500)),
+                (
+                    "phone_number",
+                    phonenumber_field.modelfields.PhoneNumberField(
+                        max_length=128, region=None, unique=True
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+            ],
+            options={
+                "abstract": False,
+            },
+        ),
+        migrations.AddField(
+            model_name="product",
+            name="seller",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="seller_products",
+                to="shopick.seller",
+            ),
         ),
         migrations.CreateModel(
             name="Wishlist",
