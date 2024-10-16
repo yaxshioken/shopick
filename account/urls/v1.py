@@ -3,7 +3,8 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (TokenObtainSlidingView,
                                             TokenRefreshSlidingView)
 
-from account.api_endpoints import TransactionViewSet, PasswordResetRequestView, PasswordResetConfirmView
+from account.api_endpoints import TransactionViewSet, PasswordResetRequestView, PasswordResetConfirmView, LoginView, \
+    RegisterView
 from account.api_endpoints.account.views import (CardViewSet,
                                                  NotificationsViewSet,
                                                  ProfileViewSet, SellerViewSet,
@@ -19,27 +20,26 @@ router.register(r"notifications", NotificationsViewSet, basename="notifications"
 router.register(r"transactions", TransactionViewSet, basename="transactions")
 
 urlpatterns = router.urls
-token_urlpatterns = [
-path(
-    "password-reset-request/",
-    PasswordResetRequestView.as_view(),
-    name="password_reset_request",
-),
-path(
-    "password-reset-confirm/",
-    PasswordResetConfirmView.as_view(),
-    name="password_reset_confirm",
-),
-    ]
+
 # router.register(r'token', TokenObtainSlidingView.as_view(), basename='token')
 #
 # router.register(r'refresh', TokenRefreshSlidingView.as_view(), basename='refresh')
 
+
+token_urlpatterns = [
+    path("login/", LoginView.as_view(), name="login"),
+    path("register/", RegisterView.as_view(), name="register"),
+    path("api/token/", TokenObtainSlidingView.as_view(), name="token_obtain"),
+    path("api/token/refresh/", TokenRefreshSlidingView.as_view(), name="token_refresh"),
+    path(
+        "password-reset-request/",
+        PasswordResetRequestView.as_view(),
+        name="password_reset_request",
+    ),
+    path(
+        "password-reset-confirm/",
+        PasswordResetConfirmView.as_view(),
+        name="password_reset_confirm",
+    ),
+]
 urlpatterns += token_urlpatterns
-# token_urlpatterns = [
-#     path("login/", LoginView.as_view(), name="login"),
-#     path("register/", RegisterView.as_view(), name="register"),
-#     path("api/token/", TokenObtainSlidingView.as_view(), name="token_obtain"),
-#     path("api/token/refresh/", TokenRefreshSlidingView.as_view(), name="token_refresh"),
-# ]
-# urlpatterns += token_urlpatterns

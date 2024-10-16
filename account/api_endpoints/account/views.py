@@ -17,7 +17,7 @@ class UserViewSet(ModelViewSet):
 class SellerViewSet(ModelViewSet):
     queryset = Seller.objects.all()
     serializer_class = SellerSerializer
-    my_tags=('Sellers',)
+    my_tags=('Sellers   ',)
 
 class CardViewSet(ModelViewSet):
     queryset = Card.objects.all()
