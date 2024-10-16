@@ -5,7 +5,9 @@ __pycache__/
 
 # C extensions
 *.so
-
+static/
+account/migrations/
+shopick/migrations/
 # Distribution / packaging
 .Python
 build/

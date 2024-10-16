@@ -1,37 +1,24 @@
 from rest_framework import serializers
 
-from account.models import Account
-from shopick.models import Order, Card, Wishlist, Product, Seller, Category, Comment, Profile, User
 
+from shopick.models import ( Category, Comment, Order, Product,
+                            Seller,  Wishlist)
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Account
-        fields = ("first_name", "last_name", "email", "phone")
-        extra_kwargs = {
-            "first_name": {"required": True},
-            "email": {"required": True},
-            "phone": {"required": True},
-            "username": {"required": False},
-        }
-
-
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = ('id', "user", "address", "city", "country")
 
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ('id', "user", "comment")
+        fields = ("id", "user", "comment")
 
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ('id', "name",)
+        fields = (
+            "id",
+            "name",
+        )
 
 
 class SellerSerializer(serializers.ModelSerializer):
@@ -57,7 +44,7 @@ class ProductSerializer(serializers.ModelSerializer):
         #     "like",
         #     "views",
         # )
-        fields = '__all__'
+        fields = "__all__"
 
 
 class WishlistSerializer(serializers.ModelSerializer):
@@ -66,32 +53,19 @@ class WishlistSerializer(serializers.ModelSerializer):
         fields = ("product", "user", "quantity")
 
 
-class CardSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Card
-        fields = (
-            "card_number",
-            "expiration_date",
-            'card_token',
-            "cvv",
-            "payment_amount",
-            "payment_type",
-            "payment_date",
-            "payment_status"
-        )
 
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = (
-            'reception_area',
-            'user_area',
-            'user',
-            'payment_type',
-            'product',
-            'amount',
-            'order_date',
-            'delivery_date',
-            'status'
+            "reception_area",
+            "user_area",
+            "user",
+            "payment_type",
+            "product",
+            "amount",
+            "order_date",
+            "delivery_date",
+            "status",
         )

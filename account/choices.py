@@ -1,4 +1,4 @@
-from click import Choice
+
 from django.db.models import TextChoices
 
 

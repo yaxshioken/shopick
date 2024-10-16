@@ -33,7 +33,7 @@ class Profile(TimeStampedModel):
 
 
 class Seller(TimeStampedModel):
-    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    user = models.OneToOneField(Account, on_delete=models.CASCADE,related_name="sellers")
     name = models.CharField(max_length=200)
     description = models.TextField()
     location = models.CharField(max_length=500)
@@ -48,16 +48,20 @@ class Card(TimeStampedModel):
     expiration_date = models.DateField()
     cvv = models.CharField(max_length=3, null=False)
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    balance = models.DecimalField(max_digits=10, decimal_places=2, )
+    balance = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+    )
 
     def clean(self):
-        card=super().clean()
+        card = super().clean()
         if card.balance <= 0:
             raise ValidationError("Hisobingizdagi mablag' 0 dan kichik!!!")
         return card
 
     class Meta:
-        unique_together = ('card_number', 'user')
+        unique_together = ("card_number", "user")
+
     def __str__(self):
         return self.card_number
 
@@ -85,11 +89,18 @@ class Notifications(TimeStampedModel):
         verbose_name = "Notifications"
         verbose_name_plural = "Notifications"
 
+
 class Transaction(TimeStampedModel):
-    card = models.ForeignKey(Card, on_delete=models.CASCADE, related_name="transactions")
+    card = models.ForeignKey(
+        Card, on_delete=models.CASCADE, related_name="transactions"
+    )
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    sender = models.ForeignKey(Card, on_delete=models.CASCADE, related_name="sent_transactions")
-    receiver = models.ForeignKey(Card, on_delete=models.CASCADE, related_name="received_transactions")
+    sender = models.ForeignKey(
+        Card, on_delete=models.CASCADE, related_name="sent_transactions"
+    )
+    receiver = models.ForeignKey(
+        Card, on_delete=models.CASCADE, related_name="received_transactions"
+    )
     payment_amount = models.IntegerField(null=False, blank=False, default=0)
     payment_type = models.CharField(
         max_length=200, choices=PaymentTypeChoice.choices, default=PaymentTypeChoice.UZS

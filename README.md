@@ -1,1 +1,1 @@
-# shopick
+###<b>Assalomu alaykum Siz bu yerda bizning Shopickimizdan foydalanishingiz mumkin!!!</b>

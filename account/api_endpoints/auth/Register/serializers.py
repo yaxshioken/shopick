@@ -10,7 +10,6 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from shopick.models import Account
 
 
-
 class RegisterSerializer(TokenObtainPairSerializer):
     first_name = CharField(required=True)
     last_name = CharField(required=False)
@@ -33,13 +32,13 @@ class RegisterSerializer(TokenObtainPairSerializer):
         email = data.get("email")
 
         if password != password2:
-            raise ValidationError({"password": _("Passwords must match.")})
+            raise ValidationError({"password": _("Parollar Bir-Biriga Mos Emas!!!")})
 
         if Account.objects.filter(phone=phone).exists():
-            raise ValidationError({"phone": _("Phone number already exists.")})
+            raise ValidationError({"phone": _("Raqam Oldin Ro'yxatdan O'tgan!!!")})
 
         if Account.objects.filter(email=email).exists():
-            raise ValidationError({"email": _("Email already exists.")})
+            raise ValidationError({"email": _("Email Oldin Ro'yxatdan O'tgan!!!")})
 
         return data
 

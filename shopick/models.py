@@ -2,6 +2,7 @@ import uuid
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
 
 from account.models import Account
 from shared.models import TimeStampedModel
@@ -18,12 +19,14 @@ class Category(TimeStampedModel):
         verbose_name_plural = "Categories"
         verbose_name = "Category"
 
+
 class Seller(TimeStampedModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     description = models.TextField()
     location = models.CharField(max_length=500)
     phone_number = PhoneNumberField(unique=True, blank=False, null=False)
+
 
 class Comment(TimeStampedModel):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
@@ -93,16 +96,3 @@ class Order(TimeStampedModel):
         return str(self.product)
 
 
-class Card(TimeStampedModel):
-    card_number = models.CharField(max_length=200)
-    expiration_date = models.DateField(auto_now_add=True)
-    card_token = models.CharField(max_length=200)
-    cvv = models.CharField(max_length=200, null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    payment_amount = models.IntegerField()
-    payment_type = models.CharField(max_length=200)
-    payment_date = models.DateField(auto_now_add=True)
-    payment_status = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.card_number

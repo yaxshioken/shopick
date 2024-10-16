@@ -22,7 +22,7 @@ app.conf.broker_url = "redis://localhost:6379/0"
 app.conf.timezone = "Asia/Tashkent"
 app.conf.beat_schedule = {
     "send-sms-every-day-at-18": {
-        "task": "apps.account.tasks.mark_as_read_lastweek_notifications",
+        # "task": "apps.account.tasks.mark_as_read_lastweek_notifications",
         "schedule": crontab(minute=38, hour=17),
     },
     # Load task modules from all registered Django apps.

@@ -19,17 +19,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from shopick.api_endpoints.auth.ResetParol.view import PasswordResetRequestView, PasswordResetConfirmView
 
 from config.swaggers import swagger_urlpatterns
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/v1/", include("account.urls.v1")),
-    path("api/v1/", include("shopick.urls.v1"), name="shopick"),
+    path("account/", include("account.urls.v1")),
     path("", include("shopick.urls.v1"), name="shopick"),
-    path('password-reset-request/', PasswordResetRequestView.as_view(), name='password_reset_request'),
-    path('password-reset-confirm/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 
 ]
 urlpatterns += swagger_urlpatterns
