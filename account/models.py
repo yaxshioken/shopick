@@ -1,13 +1,9 @@
 import uuid
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from pgcli.packages.parseutils.meta import ForeignKey
 from phonenumber_field.modelfields import PhoneNumberField
 from rest_framework.exceptions import ValidationError
-
-from account.choices import (NotificationChoice, PaymentStatusChoice,
-                             PaymentTypeChoice)
+from account.choices import (NotificationChoice, PaymentStatusChoice, PaymentTypeChoice)
 from config.managers import UserManager
 from shared.models import TimeStampedModel
 
@@ -82,12 +78,13 @@ class Notifications(TimeStampedModel):
         return self.message
 
     def mark_as_read(self):
-        self.is_read = False
+        self.is_read = True
         self.save()
 
     class Meta:
         verbose_name = "Notifications"
         verbose_name_plural = "Notifications"
+
 
 
 class Transaction(TimeStampedModel):
@@ -111,3 +108,6 @@ class Transaction(TimeStampedModel):
 
     def __str__(self):
         return f"{self.sender} to {self.receiver}: {self.amount}"
+
+
+

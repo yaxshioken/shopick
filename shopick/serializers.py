@@ -69,3 +69,13 @@ class OrderSerializer(serializers.ModelSerializer):
             "delivery_date",
             "status",
         )
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ['user', 'product', 'comment', 'parent', 'like']
+
+    def validate(self, data):
+        product = data.get('product')
+        user = data.get('user')
+        return data
