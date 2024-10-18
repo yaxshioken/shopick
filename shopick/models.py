@@ -3,6 +3,7 @@ import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from rest_framework.exceptions import ValidationError
 
 from account.models import Account
 from shared.models import TimeStampedModel
@@ -33,6 +34,9 @@ class Comment(TimeStampedModel):
     product = models.ForeignKey("Product", on_delete=models.CASCADE)
     like = models.IntegerField(default=0)
     comment = models.TextField(blank=True, null=True)
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
+    seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
+
 
     def __str__(self):
         return self.comment
@@ -72,10 +76,24 @@ class Product(TimeStampedModel):
         return f"/products/{self.id}"
 
 
+class Like(TimeStampedModel):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    product = models.ForeignKey("Product", on_delete=models.CASCADE, related_name='likes')
+    liked_at = models.DateTimeField(auto_now_add=True)
+
+
 class Wishlist(TimeStampedModel):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
+
+    def clean(self):
+        if self.product.user == self.user:
+            raise ValidationError("You cannot like your own product.")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return str(self.product)
@@ -94,5 +112,3 @@ class Order(TimeStampedModel):
 
     def __str__(self):
         return str(self.product)
-
-

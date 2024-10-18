@@ -1,9 +1,11 @@
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import serializers
+from django.shortcuts import get_object_or_404
+from rest_framework.exceptions import ValidationError
 
 from account.models import (Account, Card, Notifications, Profile, Seller,
                             Transaction)
+from shopick.models import Product, Like
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -46,8 +48,8 @@ class CardSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if (
-            data["card_number"] is not None
-            and data["expiration_date"] >= timezone.now().date()
+                data["card_number"] is not None
+                and data["expiration_date"] >= timezone.now().date()
         ):
             raise serializers.ValidationError(
                 "Karta raqami noto'g'ri yoki muddati o'tgan."
@@ -68,10 +70,11 @@ class NotificationSerializer(serializers.ModelSerializer):
         model = Notifications
         fields = "__all__"
 
+    def create(self, validated_data):
+        return super().create(validated_data)
 
-from rest_framework import serializers
-from django.shortcuts import get_object_or_404
-
+    def validate(self, data):
+        return data
 
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
