@@ -63,11 +63,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class NotificationSerializer(serializers.ModelSerializer):
+class NotificationsSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Notifications
-        fields = "__all__"
-
+        fields = '__all__'
 
 from rest_framework import serializers
 from django.shortcuts import get_object_or_404

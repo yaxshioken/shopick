@@ -2,11 +2,10 @@
 from rest_framework.routers import DefaultRouter
 
 from account.models import Transaction
-from shopick.api_endpoints import CommentViewSet, CategoryViewSet, ProductViewSet, WishlistViewSet, OrderViewSet
+from shopick.api_endpoints import  CategoryViewSet, ProductViewSet, WishlistViewSet, OrderViewSet
 
 router = DefaultRouter()
 
-router.register(r"comments", CommentViewSet, basename="comments"),
 router.register(r"categories", CategoryViewSet, basename="categories"),
 
 router.register(r"products", ProductViewSet, basename="products"),

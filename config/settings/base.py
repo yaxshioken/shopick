@@ -48,6 +48,7 @@ THIRD_APPS = [
     "drf_yasg",
     "rest_framework_simplejwt",
     "phonenumber_field",
+    'django_filters'
 ]
 INSTALLED_APPS = DJANGO_APPS + CUSTOM_APPS + THIRD_APPS
 
@@ -144,6 +145,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 SIMPLE_JWT = {
@@ -155,7 +157,7 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "kocharovmirshakar@gmail.com"
+EMAIL_HOST_USER = "mirshakar@gmail.com"
 EMAIL_HOST_PASSWORD = "z l x t l u u o e x k c s d t h"
 
 

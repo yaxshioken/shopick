@@ -17,6 +17,7 @@ class Account(AbstractUser, TimeStampedModel):
     phone = PhoneNumberField(unique=True, max_length=13, null=False)
     USERNAME_FIELD = "phone"
     objects = UserManager()
+    is_seller=models.BooleanField(default=False)
 
     def __str__(self):
         return self.phone
@@ -44,7 +45,7 @@ class Seller(TimeStampedModel):
 
 
 class Card(TimeStampedModel):
-    card_number = models.CharField(max_length=16, unique=True, blank=False, null=False)
+    card_number=models.CharField(max_length=16, unique=True,null=False)
     expiration_date = models.DateField()
     cvv = models.CharField(max_length=3, null=False)
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
@@ -85,9 +86,6 @@ class Notifications(TimeStampedModel):
         self.is_read = False
         self.save()
 
-    class Meta:
-        verbose_name = "Notifications"
-        verbose_name_plural = "Notifications"
 
 
 class Transaction(TimeStampedModel):

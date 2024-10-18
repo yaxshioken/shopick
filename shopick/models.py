@@ -20,22 +20,7 @@ class Category(TimeStampedModel):
         verbose_name = "Category"
 
 
-class Seller(TimeStampedModel):
-    user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
-    description = models.TextField()
-    location = models.CharField(max_length=500)
-    phone_number = PhoneNumberField(unique=True, blank=False, null=False)
 
-
-class Comment(TimeStampedModel):
-    user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    product = models.ForeignKey("Product", on_delete=models.CASCADE)
-    like = models.IntegerField(default=0)
-    comment = models.TextField(blank=True, null=True)
-
-    def __str__(self):
-        return self.comment
 
 
 class Product(TimeStampedModel):

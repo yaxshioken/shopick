@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from shopick.models import Category, Comment, Order, Product, Wishlist
-
+from shopick.models import Category,  Order, Product, Wishlist
+from shopick.tasks import create_notification_for_users
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -14,7 +14,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         instance = super().create(validated_data)
-        create_notification_for_users.delay(instance.id)
+        create_notification_for_users().delay(instance.id)
         return instance
 
 
@@ -31,16 +31,7 @@ class CategorySerializer(serializers.ModelSerializer):
         depth = 1
 
 
-class CommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = "__all__"
-        # extra_kwargs = {
-        #     "like":{"required":False},
-        #     "product":{"required":False},
-        #
-        # }
-        read_only_fields = ("user",)
+
 
 
 class WishlistSerializer(serializers.ModelSerializer):

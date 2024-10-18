@@ -1,19 +1,20 @@
+from django.contrib.auth.decorators import permission_required
 from django.db.models.query_utils import Q
+from rest_framework.decorators import permission_classes
 from rest_framework.viewsets import ModelViewSet
 
 from shopick.api_endpoints.shopick.serializers import (CategorySerializer,
-                                                       CommentSerializer,
+
                                                        OrderSerializer,
                                                        ProductSerializer,
                                                        WishlistSerializer)
-from shopick.models import Category, Comment, Order, Product, Wishlist
+from shopick.models import Category, Order, Product, Wishlist
 
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     my_tags = ('Products',)
-
     def get_queryset(self):
         query = self.request.query_params.get("search", None)
         queryset = super().get_queryset()
@@ -50,10 +51,7 @@ class CategoryViewSet(ModelViewSet):
     serializer_class = CategorySerializer
     my_tags = ('Categories',)
 
-class CommentViewSet(ModelViewSet):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-    my_tags=('Comments',)
+
 
 class WishlistViewSet(ModelViewSet):
     queryset = Wishlist.objects.all()

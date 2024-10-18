@@ -1,10 +1,12 @@
+from django.db.models.signals import post_save
+
 from account.choices import NotificationChoice
 from account.models import Account, Notifications
 from config.celery import app
 from shopick.models import Product
 
 
-@app.task(bind=True, ignore_result=True)
+@app.task(bind=True, ignore_result=True,post_save=True)
 def create_notification_for_users(self, product_id):
 
     instance = Product.objects.get(id=product_id)
