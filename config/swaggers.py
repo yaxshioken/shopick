@@ -37,7 +37,7 @@ swagger_urlpatterns = [
     ),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
 
-    path('products/<uuid:product_id>/comments/', CommentView.as_view(), name='product_comments'),
+    path('products/comments/', CommentView.as_view(), name='product_comments'),
 
-    path('products/<uuid:product_id>/like/', LikeView.as_view(), name='product_like'),
+    path('products/like/', LikeView.as_view(), name='product_like'),
 ]
