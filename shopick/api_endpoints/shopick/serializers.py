@@ -1,3 +1,5 @@
+from django.db.models.signals import post_save
+from django.dispatch.dispatcher import receiver
 from rest_framework import serializers
 
 from shopick.models import Category,  Order, Product, Wishlist
@@ -12,10 +14,10 @@ class ProductSerializer(serializers.ModelSerializer):
             "picture": {"required": False, "allow_null": True},
         }
 
-    def create(self, validated_data):
-        instance = super().create(validated_data)
-        create_notification_for_users().delay(instance.id)
-        return instance
+    @receiver(post_save, sender=Product)
+    def notify_users(sender, instance, created, **kwargs):
+        if created:
+            create_notification_for_users.delay(instance.id)
 
 
 class OrderSerializer(serializers.ModelSerializer):
