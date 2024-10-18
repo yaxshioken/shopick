@@ -47,7 +47,7 @@ class RegisterSerializer(TokenObtainPairSerializer):
         password = validated_data.pop("password")
         phone = validated_data.get("phone")
 
-        username = slugify(f"{uuid4()}-{phone}")
+        username = slugify(f"{validated_data.get('last_name')}-{validated_data.get('first_name')}-{phone}")
         while Account.objects.filter(username=username).exists():
             username = slugify(f"{uuid4()}-{phone}")
 
