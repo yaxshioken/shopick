@@ -25,3 +25,5 @@ psycopg2-binary>=2.9.9,<3.0
 celery
 redis
 gunicorn
+django-extensions>=3.2.3,<3.3
+

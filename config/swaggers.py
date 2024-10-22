@@ -3,6 +3,7 @@ from drf_yasg import openapi
 from drf_yasg.inspectors import SwaggerAutoSchema
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
+
 from shopick.api_endpoints import CommentView, LikeView
 
 
@@ -14,6 +15,8 @@ class CustomAutoSchema(SwaggerAutoSchema):
             tags = [operation_keys[0]]
 
         return tags
+
+
 schema_view = get_schema_view(
     openapi.Info(
         title="Shopick API",
@@ -37,7 +40,4 @@ swagger_urlpatterns = [
     ),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
 
-    path('products/comments/', CommentView.as_view(), name='product_comments'),
-
-    path('products/like/', LikeView.as_view(), name='product_like'),
 ]

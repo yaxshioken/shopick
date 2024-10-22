@@ -18,3 +18,15 @@ class ColorChoice(TextChoices):
     PINK = "pink", "Pink"
     WHITE = "white", "White"
     BLACK = "black", "Black"
+class BrandChoice(TextChoices):
+    NONE = "", "None"
+    NIKE = 'NIKE', 'Nike'
+    ADIDAS = 'ADIDAS', 'Adidas'
+    PUMA = 'PUMA', 'Puma'
+    UNDER_ARMOUR = 'UNDER_ARMOUR', 'Under Armour'
+    REEBOK = 'REEBOK', 'Reebok'
+    HM = 'H&M', 'H&M'
+    ZARA = 'ZARA', 'Zara'
+    UNIQLO = 'UNIQLO', 'Uniqlo'
+    LEVI_STRAUSS = 'LEVI_STRAUSS', 'Levi Strauss'
+    GAP = 'GAP', 'Gap'

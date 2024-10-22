@@ -11,7 +11,8 @@ from shopick.models import Account
 class RegisterView(TokenObtainSlidingView):
     queryset = Account.objects.all()
     serializer_class = RegisterSerializer
-    my_tags = ('Register',)
+    my_tags = ("Register",)
+
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)

@@ -7,18 +7,17 @@ from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from account.api_endpoints.auth.ResetParol.serializers import PasswordResetSerializer, PasswordResetConfirmSerializer
+from account.api_endpoints.auth.ResetParol.serializers import (
+    PasswordResetConfirmSerializer, PasswordResetSerializer)
 from account.models import Account
 
-
 # from shared.task import generate_sms_code, send_sms
-
 
 
 class PasswordResetRequestView(generics.GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = PasswordResetSerializer
-
+    my_tags=('Password Reset',)
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -55,7 +54,8 @@ class PasswordResetRequestView(generics.GenericAPIView):
 class PasswordResetConfirmView(generics.GenericAPIView):
     serializer_class = PasswordResetConfirmSerializer
     permission_classes = [AllowAny]
-    my_tags = ('ResetPassword',)
+    my_tags = ("Confirm Reset Password",)
+
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

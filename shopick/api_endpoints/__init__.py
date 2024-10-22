@@ -1,2 +1,2 @@
-from .shopick.views import *
 from .shopick.serializers import *
+from .shopick.views import *
