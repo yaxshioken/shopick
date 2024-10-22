@@ -1,12 +1,11 @@
-import uuid
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from rest_framework.exceptions import ValidationError
 
 from account.models import Account
 from shared.models import TimeStampedModel
-from shopick.choices import ColorChoice, SizeChoice
+from shopick.choices import ColorChoice, SizeChoice, BrandChoice
 
 
 class Category(TimeStampedModel):
@@ -20,13 +19,29 @@ class Category(TimeStampedModel):
         verbose_name = "Category"
 
 
+class Seller(TimeStampedModel):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
+    description = models.TextField()
+    location = models.CharField(max_length=500)
+    phone_number = PhoneNumberField(unique=True, blank=False, null=False)
 
+
+class Comment(TimeStampedModel):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    product = models.ForeignKey("Product", on_delete=models.CASCADE)
+    like = models.IntegerField(default=0)
+    comment = models.TextField(null=False, blank=False)
+    parent = models.ForeignKey(
+        "self", null=True, blank=True, related_name="replies", on_delete=models.CASCADE
+    )
+
+
+    def __str__(self):
+        return self.comment
 
 
 class Product(TimeStampedModel):
-    id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False, unique=True
-    )
     name = models.CharField(max_length=200, unique=True)
     description = models.TextField()
     amount = models.IntegerField(null=False)
@@ -35,7 +50,7 @@ class Product(TimeStampedModel):
     size = models.CharField(choices=SizeChoice.choices, default=SizeChoice.NONE)
     color = models.CharField(choices=ColorChoice.choices, default=ColorChoice.NONE)
     discount_percent = models.DecimalField(max_digits=5, decimal_places=2, null=True)
-    brand = models.CharField(max_length=200)
+    brand = models.CharField(max_length=200,choices=BrandChoice.choices,default=BrandChoice.NONE)
     like = models.ManyToManyField(Account, related_name="product_like", blank=True)
     views = models.ManyToManyField(Account, related_name="viewed_products", blank=True)
     category = models.ManyToManyField(Category, related_name="categories")
@@ -57,10 +72,26 @@ class Product(TimeStampedModel):
         return f"/products/{self.id}"
 
 
+class Like(TimeStampedModel):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        "Product", on_delete=models.CASCADE, related_name="likes"
+    )
+    liked_at = models.DateTimeField(auto_now_add=True)
+
+
 class Wishlist(TimeStampedModel):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
+
+    def clean(self):
+        if self.product.user == self.user:
+            raise ValidationError("You cannot like your own product.")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return str(self.product)
@@ -79,5 +110,3 @@ class Order(TimeStampedModel):
 
     def __str__(self):
         return str(self.product)
-
-

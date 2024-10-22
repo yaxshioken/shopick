@@ -26,7 +26,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("account/", include("account.urls.v1")),
     path("", include("shopick.urls.v1"), name="shopick"),
-
 ]
 urlpatterns += swagger_urlpatterns
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

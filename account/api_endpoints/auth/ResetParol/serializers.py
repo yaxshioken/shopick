@@ -19,9 +19,7 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         new_password = data.get("new_password")
         confirm_password = data.get("confirm_password")
         if new_password != confirm_password:
-            raise serializers.ValidationError(
-                "Parollar Bir-Biriga Mos Emas!!!"
-            )
+            raise serializers.ValidationError("Parollar Bir-Biriga Mos Emas!!!")
         return data
 
 

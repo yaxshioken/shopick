@@ -23,6 +23,7 @@ platformdirs>=4.3.6,<4.4
 Pillow>=10.4.0,<10.5
 psycopg2-binary>=2.9.9,<3.0
 django-filter>=24.3,<25
+django-extensions>=3.2.3,<3.3
 celery
 redis
 gunicorn

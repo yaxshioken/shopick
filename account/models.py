@@ -2,9 +2,10 @@ import uuid
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from pgcli.packages.parseutils.meta import ForeignKey
+from django.utils.termcolors import RESET
 from phonenumber_field.modelfields import PhoneNumberField
 from rest_framework.exceptions import ValidationError
+from rest_framework.response import Response
 
 from account.choices import (NotificationChoice, PaymentStatusChoice,
                              PaymentTypeChoice)
@@ -19,8 +20,9 @@ class Account(AbstractUser, TimeStampedModel):
     objects = UserManager()
     is_seller=models.BooleanField(default=False)
 
+
     def __str__(self):
-        return self.phone
+        return self.first_name
 
 
 class Profile(TimeStampedModel):
@@ -28,14 +30,16 @@ class Profile(TimeStampedModel):
     address = models.CharField(max_length=200)
     city = models.CharField(max_length=200)
     country = models.CharField(max_length=200)
-
+    unique_together = ("user",)
     def __str__(self):
         return self.user
 
 
 class Seller(TimeStampedModel):
-    user = models.OneToOneField(Account, on_delete=models.CASCADE,related_name="sellers")
-    name = models.CharField(max_length=200)
+    user = models.OneToOneField(
+        Account, on_delete=models.CASCADE, related_name="sellers"
+    )
+    name = models.CharField(max_length=200,unique=True)
     description = models.TextField()
     location = models.CharField(max_length=500)
     phone_number = PhoneNumberField(unique=True, blank=False, null=False)
@@ -83,23 +87,15 @@ class Notifications(TimeStampedModel):
         return self.message
 
     def mark_as_read(self):
-        self.is_read = False
+        self.is_read = True
         self.save()
 
 
 
 class Transaction(TimeStampedModel):
-    card = models.ForeignKey(
-        Card, on_delete=models.CASCADE, related_name="transactions"
-    )
-    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    sender = models.ForeignKey(
-        Card, on_delete=models.CASCADE, related_name="sent_transactions"
-    )
-    receiver = models.ForeignKey(
-        Card, on_delete=models.CASCADE, related_name="received_transactions"
-    )
-    payment_amount = models.IntegerField(null=False, blank=False, default=0)
+    card = models.CharField(max_length=16, blank=False, null=False)
+    sender=models.CharField(max_length=40)   ##TODO
+    amount = models.DecimalField(max_digits=10, decimal_places=2,null=False)
     payment_type = models.CharField(
         max_length=200, choices=PaymentTypeChoice.choices, default=PaymentTypeChoice.UZS
     )
@@ -108,4 +104,4 @@ class Transaction(TimeStampedModel):
     )
 
     def __str__(self):
-        return f"{self.sender} to {self.receiver}: {self.amount}"
+        return f"{self.amount}"

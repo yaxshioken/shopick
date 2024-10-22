@@ -1,7 +1,8 @@
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import serializers
-
+from django.shortcuts import get_object_or_404
+from django.db import transaction
+from account.choices import PaymentStatusChoice
 from account.models import (Account, Card, Notifications, Profile, Seller,
                             Transaction)
 
@@ -18,7 +19,11 @@ class UserSerializer(serializers.ModelSerializer):
 class SellerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Seller
-        fields = "__all__"
+        fields = ('id', 'name', 'description', 'location', 'phone_number')
+        read_only_fields = ('id', "created_at", "updated_at", 'user')
+        extra_kwargs = {
+            "user": {"required": False},
+        }
 
 
 class CardSerializer(serializers.ModelSerializer):
@@ -34,7 +39,7 @@ class CardSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "id": {"read_only": True},
             "cvv": {"write_only": True, "required": True},
-            "card_number": {"write_only": True, "required": True},
+            "card_number": {"required": True},
             "expiration_date": {"write_only": True, "required": True},
             "balance": {"required": True},
         }
@@ -46,8 +51,8 @@ class CardSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if (
-            data["card_number"] is not None
-            and data["expiration_date"] >= timezone.now().date()
+                data["card_number"] is not None
+                and data["expiration_date"] >= timezone.now().date()
         ):
             raise serializers.ValidationError(
                 "Karta raqami noto'g'ri yoki muddati o'tgan."
@@ -61,16 +66,30 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = "__all__"
+        read_only_fields = ("user",)
 
 
-class NotificationsSerializer(serializers.ModelSerializer):
-
+class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notifications
-        fields = '__all__'
+        fields = "__all__"
 
-from rest_framework import serializers
-from django.shortcuts import get_object_or_404
+    def create(self, validated_data):
+        return super().create(validated_data)
+
+    def validate(self, data):
+        return data
+
+    def get_serializer(self, *args, **kwargs):
+        kwargs["context"] = self.get_serializer_context()
+        return super().get_serializer(*args, **kwargs)
+
+
+
+
+
+
+
 
 
 class TransactionSerializer(serializers.ModelSerializer):
@@ -81,35 +100,55 @@ class TransactionSerializer(serializers.ModelSerializer):
             "amount",
             "payment_amount",
             "payment_status",
+            "sender",
         )
         extra_kwargs = {
             "payment_type": {"write_only": True},
             "payment_amount": {"required": True},
             "payment_status": {"read_only": True},
-            "cvv": {"required": False, "write_only": True},
+            "sender": {"read_only": True},
         }
 
     def validate(self, data):
         user = self.context["request"].user
         card_owner = get_object_or_404(Card, user=user)
-        receiver_card_number = data.get("card_number")
+        receiver_card_number = data.get("card")
 
-        if not card_owner.card_number or card_owner.card_number == receiver_card_number:
-            raise serializers.ValidationError("Biron nima xato ketdi Tekshiring !!!")
-        elif card_owner.card_number < data["payment_amount"]:
-            raise serializers.ValidationError("Hisobingizda mablag' yetarli emas!!!")
-        elif receiver_card_number is None:
+
+        if not Card.objects.filter(user=user).exists():
+            raise serializers.ValidationError('Sizda aktiv kartalar mavjud emas :)')
+
+
+        if receiver_card_number is None:
             raise serializers.ValidationError("Siz kiritgan karta mavjud emas :)")
+
+        receiver_card = get_object_or_404(Card, card_number=receiver_card_number)
+
+
+        amount = data.get("amount")
+        if amount is None or amount <= 0:
+            raise serializers.ValidationError("Mablag' miqdori to'g'ri kiritilmagan!")
+
+
+        if card_owner.balance < amount:
+            raise serializers.ValidationError("Hisobingizda mablag' yetarli emas!!!")
+
+
+        card_owner.balance -= amount
+        receiver_card.balance += amount
+
+
+        data['sender'] = user
+        data['payment_status'] = PaymentStatusChoice.SUCCESS
+
+
+        with transaction.atomic():
+            card_owner.save()
+            receiver_card.save()
 
         return data
 
     def create(self, validated_data):
-        user = self.context["request"].user
-        card = get_object_or_404(Card, user=user)
-        validated_data["card"] = card.card_number
-
-        receiver = self.context.get("receiver")
-        if receiver:
-            validated_data["receiver"] = receiver.card_number
-
-        return super().create(validated_data)
+        # user = self.context["request"].user
+        transaction = Transaction.objects.create(**validated_data)
+        return transaction
